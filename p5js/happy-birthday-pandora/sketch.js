@@ -1,15 +1,14 @@
 const G = new Object(null);
 
-G.message = "  HAPPY BIRTHDAY PANDORA!!!  ";
+G.message = "     HAPPY BIRTHDAY PANDORA!!!";
 G.frameRate=60;
 G.pastel = 255*.7;
-G.blockspacing = 0.95;
-G.period = 7;
-G.wavemult = 4;
+G.blockspacing = 0.9;
+G.period = 8;
 G.bgr = 255;
 G.bgg = 255;
 G.bgb = 255;
-G.bgskewps = 0.5;
+G.bgskewps = 0.65;
 
 function randomPastel() {
   let r = random(G.pastel, 255);
@@ -25,18 +24,18 @@ function makeBlock(sz, ltr, col) {
   b.fill(col);
   b.strokeWeight(sz/10);
   // b.square(0, 0, sz, sz/5);
-  b.circle(sz/2, sz/2, sz*.9);
+  b.circle(sz/2, sz/2, sz*.85);
   
   b.stroke(128);
   b.noFill();
   b.strokeWeight(2);
   // b.square(sz*0.05, sz*0.05, sz*.9, sz/6);
-  b.circle(sz/2, sz/2, sz*.8);
+  b.circle(sz/2, sz/2, sz*.75);
   
   b.stroke(0);
   b.noFill();
   b.strokeWeight(1);
-  b.circle(sz/2, sz/2, sz*0.9+2);
+  b.circle(sz/2, sz/2, sz*0.85+2);
   
   b.stroke(0);
   b.strokeWeight(5);
@@ -44,7 +43,7 @@ function makeBlock(sz, ltr, col) {
   b.textAlign(CENTER, CENTER);
   b.textSize(sz*.55);
   b.textStyle(BOLD);
-  b.text(ltr, sz/2, sz*0.55);
+  b.text(ltr, sz/2, sz*0.525);
   
   let i = new p5.Image(sz, sz);
   i.copy(b, 0, 0, sz, sz, 0, 0, sz, sz);
@@ -57,6 +56,10 @@ function setup() {
   G.pps = width/G.period;
   frameRate(G.frameRate);
   smooth();
+  
+  G.wavemult = 4;
+  G.tiltmod = width/330;
+  G.angleoff = 0;
   
   G.blocksize = max(50, width/(G.message.split('').length-5));
   G.blocks = [];
@@ -102,10 +105,12 @@ function draw() {
     while (xpos < -G.blocksize*2) {
       xpos += fullsize;
     }
-    let theta = xpos/width*PI*G.wavemult;
-    let yoff = - G.blocksize*sin(theta)/2;
-    let angle = - cos(theta)/2;
+    let theta = G.angleoff + xpos/width*PI*G.wavemult;
+    let yoff = - G.blocksize*cos(theta)/2;
+    let angle = sin(theta)/G.tiltmod;
     let ypos = height/2-G.blocksize/2+yoff
+    
+    G.angleoff = 0;//(G.angleoff + d / G.period) % (2 * PI);
     
     resetMatrix();
     translate(xpos + G.blocksize/2, ypos + G.blocksize/2)
