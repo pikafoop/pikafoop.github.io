@@ -6,13 +6,7 @@ G.ballSides = 25;
 G.message = "HAPPY BIRTHDAY PANDORA!!!     ";
 G.msgIndex = 0;
 G.frameRate=60;
-G.pastel = 255*.7;
-
-
-G.period = 8;
-G.bgr = 255;
-G.bgg = 255;
-G.bgb = 255;
+G.pastel = 255*0.7;
 G.bgskewps = 0.65;
 
 
@@ -68,6 +62,9 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   frameRate(60);
   
+  [G.bgr, G.bgg, G.bgb] = randomPastel();
+  [G.dbgr, G.dbgg, G.dbgb] = [0, 0, 0];
+  
   G.engine = Matter.Engine.create();
   G.world = G.engine.world;
   
@@ -91,12 +88,16 @@ function setup() {
   let t = millis();
   G.lastFrame = t;
   G.nextDrop = t + G.dropDelay;
+  G.nextReport = t;
+  G.start = t;
+  
+  console.log(G);
 }
 
 function draw() {
   let t = millis();
   let e = (t - G.start)/1000;
-  let d = (t - G.lastframe)/1000;
+  let d = (t - G.lastFrame)/1000;
   G.lastFrame = t;
   
   background(G.bgr, G.bgg, G.bgb);
@@ -114,8 +115,12 @@ function draw() {
   if (G.bgg > 255 || G.bgg < G.pastel) { G.bgg -= 2*G.dbgg; G.dbgg = 0; }
   if (G.bgb > 255 || G.bgb < G.pastel) { G.bgb -= 2*G.dbgb; G.dbgb = 0; }
   
-  fill('pink');
-  noFill();
+  if (t > G.nextReport) {
+    console.log(G.bgr, G.bgg, G.bgb);
+    G.nextReport = t + 1000;
+  }
+  
+  fill('white');
   stroke('white');
   strokeWeight(2);
   
