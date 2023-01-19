@@ -13,7 +13,7 @@ function setup() {
   G.bodies = new Set();
   
   G.grounds = new Set();
-  G.grounds.add( Matter.Bodies.rectangle( width/2, height*0.9, width * 0.9, height*0.1, {isStatic:true} ) );
+  G.grounds.add( Matter.Bodies.rectangle( width/2, height*0.95, width * 0.8, height*0.05, {isStatic:true} ) );
   
   for (let g of G.grounds) {
     Matter.Composite.add( G.world, g );
